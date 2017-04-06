@@ -14,7 +14,7 @@ case class User(id: Long, name: String)
 /**
   * Created by abdhesh on 06/04/17.
   */
-object Test {
+object Test extends App {
 
   @free trait UserRepository[F[_]] {
     def get(id: Long): FreeS[F, Option[User]]
@@ -43,9 +43,10 @@ object Test {
       userInput <- get(1)
       _ <- save(userInput)
       users <- getAll("user1")
-    } yield ()
+    } yield (users)
   }
 
   val futureValue = program[UserRepository.Op].exec[Future]
-  Await.result(futureValue, Duration.Inf)
+  val result = Await.result(futureValue, Duration.Inf)
+  println(futureValue)
 }
