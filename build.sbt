@@ -3,6 +3,7 @@ lazy val root = (project in file("."))
     name := "freestyle",
     scalaVersion := "2.12.1",
     version := "1.0",
+    scalacOptions ++= Seq("-Ymacro-debug-lite"),
     resolvers ++= Seq(
       Resolver.mavenLocal,
       Resolver.sonatypeRepo("releases"),
