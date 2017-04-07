@@ -1,6 +1,7 @@
 package nondeterminism
 
 import cats.data.Kleisli
+import com.abtechsoft.{Interpreters, Programs}
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits._
@@ -13,8 +14,10 @@ import scala.concurrent.duration._
 object MixingSequential extends App {
 
   import freestyle._
+  import freestyle.implicits._
+  import cats.implicits._
 
-  @free trait MixedFreeS[F[_]] {
+  /*@free trait MixedFreeS[F[_]] {
     def validationOp: FreeS.Par[F, Int]
 
     def databaseOp: FreeS.Par[F, Double]
@@ -50,16 +53,20 @@ object MixingSequential extends App {
   def programWeird[F[_]](implicit M: MixedFreeS[F]) = {
     import M._
     for {
-      bc <- (validationOp |@| databaseOp).tupled.freeS //(1,2) potentially x and y run in parallel
+      bc <- (validationOp |@| databaseOp).tupled.freeS
       (b, c) = bc
       d <- sagaOp(b,c) //3
-      bcp <- (validationOp |@| databaseOp).tupled.freeS //(1,2) potentially x and y run in parallel
+      bcp <- (validationOp |@| databaseOp).tupled.freeS
       (bb, cc) = bcp
       dk <- sagaOp(bb,cc) //3
     } yield d+dk
   }
+*/
 
-  val result = programWeird[MixedFreeS.Op].exec[ParMixed]
+  import Interpreters._
+  import com.abtechsoft.Modules._
+
+  val result = Programs.accountUpdateprogram[AccountUpdateServiceApp.Op](("new","newDep", 34.45),("new","newDep", 34)).exec[Interpreters.ParMixedFuture]
 
   val output = Await.result(result(), 6 seconds)
   println(output)
