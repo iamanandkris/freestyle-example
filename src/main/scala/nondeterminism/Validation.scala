@@ -13,7 +13,7 @@ object ValidationApp extends App {
   import freestyle.implicits._
   import freestyle.nondeterminism._
   import freestyle._
-
+/*
   @free trait Validation[F[_]] {
     def minSize(n: Int): FreeS.Par[F, Boolean]
 
@@ -37,5 +37,5 @@ object ValidationApp extends App {
   val parValidation = (minSize(3) |@| hasNumber).map(_ :: _ :: Nil)
   val validator = parValidation.exec[ParValidator]
   //val result = Await.result(validator, Duration(2, MILLISECONDS))
-  println(validator)
+  println(validator)*/
 }

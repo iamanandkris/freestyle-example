@@ -68,6 +68,6 @@ object MixingSequential extends App {
 
   val result = Programs.accountUpdateprogram[AccountUpdateServiceApp.Op](("new","newDep", 34.45),("new","newDep", 34)).exec[Interpreters.ParMixedFuture]
 
-  val output = Await.result(result(), 6 seconds)
+  val output = Await.result(result(), 10 seconds)
   println(output)
 }
