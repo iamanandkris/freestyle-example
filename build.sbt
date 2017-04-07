@@ -16,3 +16,4 @@ lazy val root = (project in file("."))
       compilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch)
     )
   )
+  
