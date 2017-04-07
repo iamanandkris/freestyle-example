@@ -3,7 +3,7 @@ lazy val root = (project in file("."))
     name := "freestyle-test",
     scalaVersion := "2.12.1",
     version := "1.0",
-    scalaOrganization := "myorg",
+    scalaOrganization := "org.typelevel",
     resolvers ++= Seq(
       Resolver.mavenLocal,
       Resolver.sonatypeRepo("releases"),
