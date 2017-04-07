@@ -31,3 +31,14 @@ object Modules {
   }
 
 }
+
+
+@module trait AccountUpdateServiceApp[F[_]] {
+  val validation: ValidationOp[F]
+  val dbOperation: DBOperation[F]
+  val arithOperation: Arith[F]
+  val sagaOperation: SagaOP[F]
+}
+
+
+

@@ -36,28 +36,29 @@ object Interpreters {
     def validate(id: Option[Int]): Future[Int] = Future.successful(id.getOrElse(0))
   }
 
-
-  implicit val arithInterp = new Arith.Handler[Future]{
-    def add(x:Int,y:Int):Future[Int] = Future.successful(x+y)
-    def subtract(x:Int,y:Int):Future[Int] = Future.successful(x - y)
-  }
-
-  implicit val sagaInterp = new SagaOP.Handler[Future]{
-    def updateAccount(account:(String,String,Double)):Future[Boolean] = Future.successful(true)
-    def updateUser(user:(String,String,Int)):Future[Boolean] = Future.successful(true)
-  }
-
   type ParMixedFuture[A] = Kleisli[Future, Unit, A]
+
+  implicit val arithInterp = new Arith.Handler[ParMixedFuture]{
+    def add(x:Int,y:Int):ParMixedFuture[Int] = Kleisli(s =>Future.successful(x+y))
+    def subtract(x:Int,y:Int):ParMixedFuture[Int] = Kleisli(s =>Future.successful(x - y))
+  }
+
+  implicit val sagaInterp = new SagaOP.Handler[ParMixedFuture]{
+    def updateAccount(account:(String,String,Double)):ParMixedFuture[Boolean] = Kleisli(s =>Future.successful(true))
+    def updateUser(user:(String,String,Int)):ParMixedFuture[Boolean] = Kleisli(s =>Future.successful(true))
+  }
+
+
 
   implicit val dbOpInterp = new DBOperation.Handler[ParMixedFuture]{
     def getUserById(key:String):ParMixedFuture[(String,String,Int)] = Kleisli(s => Future {
       println("getUserById ::" + s)
-      //Thread.sleep(200)
+      //Thread.sleep(1000)
       ("OldUserName", "OldDepartment", 34)
     })
     def getAccountById(key:String):ParMixedFuture[(String,String,Double)] = Kleisli(s => Future {
       println("getAccountById ::" + s)
-      //Thread.sleep(200)
+      Thread.sleep(2000)
       ("OldUserName", "OldDepartment", 12.34)
     })
   }
@@ -66,12 +67,12 @@ object Interpreters {
   implicit val validationInterp = new ValidationOp.Handler[ParMixedFuture]{
     def validateUser(inp:(String,String,Int)):ParMixedFuture[Boolean] = Kleisli(s => Future {
       println("validateUser ::" + s)
-      //Thread.sleep(200)
+      //Thread.sleep(2000)
       true
     })
     def validateAccount(inp:(String,String,Double)):ParMixedFuture[Boolean] = Kleisli(s => Future {
       println("validateAccount ::" + s)
-      //Thread.sleep(200)
+      Thread.sleep(4000)
       true
     })
   }

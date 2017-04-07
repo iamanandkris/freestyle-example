@@ -22,7 +22,7 @@ object Programs {
     } yield ()
   }
 
-  def accountUpdateprogram[F[_]](account:(String,String,Double),user:(String,String,Int))(implicit app: AccountUpdateServiceApp[F]): FreeS[F, Boolean] = {
+  def accountUpdateprogram[F[_]](account:(String,String,Double),user:(String,String,Int))(implicit app: AccountUpdateServiceApp[F])= {
     import app.arithOperation._
     import app.dbOperation._
     import app.validation._
@@ -33,13 +33,13 @@ object Programs {
       (validUser, validAccount) = validationResults
 
       updatedUserAge        <- if (validUser) add(user._3, 1)  else subtract(user._3, 1)
-      updatedAccountCredit  <- if (validAccount) FreeS.pure(account._3 * 0.5) else FreeS.pure(account._3)
+      updatedAccountCredit  <- if (validAccount) FreeS.pure[F, Double](account._3 * 0.5) else FreeS.pure[F,Double](account._3)
 
       dbResults             <- (getUserById(user._1) |@| getAccountById(account._1)).tupled.freeS
       (userOld, accountOld) = dbResults
 
-      userUpdated           <- updateUser(userOld._1, userOld._2,updatedUserAge)
-      accountUpdated        <- updateAccount(accountOld._1,accountOld._2,updatedAccountCredit)
+      userUpdated           <- updateUser((userOld._1, userOld._2,updatedUserAge))
+      accountUpdated        <- updateAccount((accountOld._1,accountOld._2,updatedAccountCredit))
     } yield userUpdated && accountUpdated
   }
 }
