@@ -39,13 +39,14 @@ object TaskInterpreters {
 
   implicit val validationInterp = new ValidationOp.Handler[ParMixedTask]{
     def validateUser(inp:(String,String,Int)):ParMixedTask[Boolean] = Kleisli(s => Task {
-      println("validateUser ::" + s)
-      //Thread.sleep(2000)
+      println("validateUser before ::" + s)
+      Thread.sleep(4000)
+      println("validateUser after ::" + s)
       true
     })
     def validateAccount(inp:(String,String,Double)):ParMixedTask[Boolean] = Kleisli(s => Task {
       println("validateAccount ::" + s)
-      Thread.sleep(4000)
+      Thread.sleep(1000)
       true
     })
   }

@@ -66,13 +66,14 @@ object Interpreters {
 
   implicit val validationInterp = new ValidationOp.Handler[ParMixedFuture]{
     def validateUser(inp:(String,String,Int)):ParMixedFuture[Boolean] = Kleisli(s => Future {
-      println("validateUser ::" + s)
-      //Thread.sleep(2000)
+      println("validateUser before::" + s)
+      Thread.sleep(4000)
+      println("validateUser after ::" + s)
       true
     })
     def validateAccount(inp:(String,String,Double)):ParMixedFuture[Boolean] = Kleisli(s => Future {
       println("validateAccount ::" + s)
-      Thread.sleep(4000)
+      Thread.sleep(1000)
       true
     })
   }
