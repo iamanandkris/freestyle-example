@@ -6,10 +6,15 @@ import scala.collection.mutable
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.abtechsoft.Algebras._
+
 /**
   * Created by abdhesh on 06/04/17.
   */
 object Interpreters {
+
+  import nondeterminism.KleisliImplicits._
+  import cats.implicits._
+
   implicit val userHandler = new Database.Handler[Future] {
     val users = mutable.ListBuffer(User(1, "user1"), User(2, "user2"), User(3, "user3"))
 
@@ -38,43 +43,45 @@ object Interpreters {
 
   type ParMixedFuture[A] = Kleisli[Future, Unit, A]
 
-  implicit val arithInterp = new Arith.Handler[ParMixedFuture]{
-    def add(x:Int,y:Int):ParMixedFuture[Int] = Kleisli(s =>Future.successful(x+y))
-    def subtract(x:Int,y:Int):ParMixedFuture[Int] = Kleisli(s =>Future.successful(x - y))
-  }
+  implicit val arithInterp = new Arith.Handler[ParMixedFuture] {
+    def add(x: Int, y: Int): ParMixedFuture[Int] = x + y
 
-  implicit val sagaInterp = new SagaOP.Handler[ParMixedFuture]{
-    def updateAccount(account:(String,String,Double)):ParMixedFuture[Boolean] = Kleisli(s =>Future.successful(true))
-    def updateUser(user:(String,String,Int)):ParMixedFuture[Boolean] = Kleisli(s =>Future.successful(true))
+    def subtract(x: Int, y: Int): ParMixedFuture[Int] = x - y
   }
 
 
+  implicit val sagaInterp = new SagaOP.Handler[ParMixedFuture] {
+    def updateAccount(account: (String, String, Double)): ParMixedFuture[Boolean] = true
 
-  implicit val dbOpInterp = new DBOperation.Handler[ParMixedFuture]{
-    def getUserById(key:String):ParMixedFuture[(String,String,Int)] = Kleisli(s => Future {
-      println("getUserById ::" + s)
+    def updateUser(user: (String, String, Int)): ParMixedFuture[Boolean] = true
+  }
+
+  implicit val dbOpInterp = new DBOperation.Handler[ParMixedFuture] {
+    def getUserById(key: String): ParMixedFuture[(String, String, Int)] = Future {
+      println("getUserById ::")
       //Thread.sleep(1000)
       ("OldUserName", "OldDepartment", 34)
-    })
-    def getAccountById(key:String):ParMixedFuture[(String,String,Double)] = Kleisli(s => Future {
-      println("getAccountById ::" + s)
+    }
+
+    def getAccountById(key: String): ParMixedFuture[(String, String, Double)] = Future {
+      println("getAccountById ::")
       Thread.sleep(2000)
       ("OldUserName", "OldDepartment", 12.34)
-    })
+    }
   }
 
-
-  implicit val validationInterp = new ValidationOp.Handler[ParMixedFuture]{
-    def validateUser(inp:(String,String,Int)):ParMixedFuture[Boolean] = Kleisli(s => Future {
+  implicit val validationInterp = new ValidationOp.Handler[ParMixedFuture] {
+    def validateUser(inp: (String, String, Int)): ParMixedFuture[Boolean] = (s: Unit) => Future {
       println("validateUser before::" + s)
       Thread.sleep(4000)
       println("validateUser after ::" + s)
       true
-    })
-    def validateAccount(inp:(String,String,Double)):ParMixedFuture[Boolean] = Kleisli(s => Future {
+    }
+
+    def validateAccount(inp: (String, String, Double)): ParMixedFuture[Boolean] = (s: Unit) => Future {
       println("validateAccount ::" + s)
       Thread.sleep(1000)
       true
-    })
+    }
   }
 }
