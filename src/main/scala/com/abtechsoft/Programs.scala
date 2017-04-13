@@ -22,7 +22,7 @@ object Programs {
     } yield ()
   }
 
-  def accountUpdateprogram[F[_]](account:(String,String,Double),user:(String,String,Int))(implicit app: AccountUpdateServiceApp[F])= {
+  def accountUpdateprogram[F[_]](account:(String,String,Double),user:(String,String,Int))(implicit app: AccountUpdateServiceApp[F]): FreeS[F, Boolean] = {
     import app.arithOperation._
     import app.dbOperation._
     import app.validation._
