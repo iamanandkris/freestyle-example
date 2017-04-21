@@ -102,14 +102,14 @@ class FreeFutureTest extends WordSpec with Matchers {
       (minSize(3) |@| hasNumber).tupled.freeS
 
     // a bit more work than  foo.exec[ParValidator] ...
-    val parValidatorMonad = KleisliMonad.kleisliMonad[Future, String]
+    val parValidatorMonad: Monad[ParValidator] = KleisliMonad.kleisliMonad[Future, String]
     val parInterpreter: ParInterpreter[Validation.Op, ParValidator] =
       interpretAp(parValidatorMonad, implicitly[Algebra.Validation.Handler[ParValidator]])
 
 
     val result: ParValidator[(Boolean, Boolean)] = program.foldMap(parInterpreter)
     import scala.concurrent.duration._
-    val output = Await.result(result.run("test"), Duration(1, SECONDS))
+    val output = Await.result(result.run("test"), Duration(7, SECONDS))
     println(output)
 
 
