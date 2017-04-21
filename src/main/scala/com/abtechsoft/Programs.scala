@@ -9,9 +9,29 @@ import cats.implicits._
 /**
   * Created by abdhesh on 06/04/17.
   */
+object Library{
+  val app = App[App.Op]
+}
+
 object Programs {
 
-  def program[F[_]](id: Int)(implicit app: App[F]): FreeS[F, Unit] = {
+  /**
+    * DEPENDENCY INJECTION
+    */
+  import Library.app._
+  def program(id: Int): FreeS[App.Op, Unit] = {
+    import display._
+    import persistence._
+    for {
+      cachedToken <- cache.get(1)
+      id <- validator.validate(cachedToken)
+      value <- database.get(id)
+      _ <- presenter.show(value)
+    } yield ()
+  }
+
+
+  def program1[F[_]](id: Int)(implicit app: App[F]): FreeS[F, Unit] = {
     import app.display._
     import app.persistence._
     for {

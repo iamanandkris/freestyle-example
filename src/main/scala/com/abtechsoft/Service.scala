@@ -12,5 +12,5 @@ import freestyle.implicits._
   * Created by abdhesh on 06/04/17.
   */
 object Service {
-  def getUser(): Future[Unit] = Programs.program[App.Op](1).exec[Future]
+  def getUser(): Future[Unit] = Programs.program(1).exec[Future]
 }

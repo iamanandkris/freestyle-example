@@ -96,6 +96,7 @@ class FreeFutureTest extends WordSpec with Matchers {
     import freestyle.nondeterminism._
 
     val validation = Validation[Validation.Op]
+    
     import validation._
 
     val program: FreeS[Validation.Op, (Boolean, Boolean)] =
@@ -110,9 +111,7 @@ class FreeFutureTest extends WordSpec with Matchers {
     val result: ParValidator[(Boolean, Boolean)] = program.foldMap(parInterpreter)
     import scala.concurrent.duration._
     val output = Await.result(result.run("test"), Duration(7, SECONDS))
-    println(output)
-
-
+   output shouldBe (true,false)
   }
 }
 
