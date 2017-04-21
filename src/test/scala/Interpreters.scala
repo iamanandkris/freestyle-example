@@ -2,9 +2,7 @@ import cats.data.Kleisli
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-/**
-  * Created by abdhesh on 13/04/17.
-  */
+
 object Interpreters {
 
   import Algebra._

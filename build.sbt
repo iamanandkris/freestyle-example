@@ -13,6 +13,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= Seq(
       "com.47deg" %% "freestyle" % "0.1.0-SNAPSHOT",
       "com.47deg" %% "freestyle-effects" % "0.1.0-SNAPSHOT",
+      "com.47deg" %% "freestyle-async" % "0.1.0-SNAPSHOT",
       "io.monix" %% "monix" % "2.2.4",
       "io.monix" %% "monix-cats" % "2.2.4",
       "com.typesafe.akka" %% "akka-actor" % "2.4.17",

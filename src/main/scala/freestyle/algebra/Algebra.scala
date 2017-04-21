@@ -12,8 +12,4 @@ object Algebra {
     def parse(text: String): FreeS[F, Option[(List[String], String)]]
   }
 
-  /*@free trait Par[F[_]] {
-    def parallel2[F[_],A[_], B[_]](free1: FreeS[F, A[_]], free2: FreeS[F, B[_]]): FreeS[F, (A, B)]
-  }*/
-
 }
