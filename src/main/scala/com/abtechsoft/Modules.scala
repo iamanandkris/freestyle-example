@@ -23,6 +23,10 @@ object Modules {
     val display: Display[F]
   }
 
+  @module trait App1[F[_]] {
+    val persistence: Persistence[F]
+  }
+
   @module trait AccountUpdateServiceApp[F[_]] {
     val validation: ValidationOp[F]
     val dbOperation: DBOperation[F]

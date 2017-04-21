@@ -96,7 +96,7 @@ class FreeFutureTest extends WordSpec with Matchers {
     import freestyle.nondeterminism._
 
     val validation = Validation[Validation.Op]
-    
+
     import validation._
 
     val program: FreeS[Validation.Op, (Boolean, Boolean)] =
