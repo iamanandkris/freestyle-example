@@ -18,6 +18,7 @@ lazy val root = (project in file("."))
       "io.monix" %% "monix-cats" % "2.2.4",
       "com.typesafe.akka" %% "akka-actor" % "2.4.17",
       "org.scalatest" %% "scalatest" % "3.0.1" % "test",
+      "com.typesafe.akka" %% "akka-testkit" % "2.5.0",
       compilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch),
       compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3")
     ))

@@ -30,24 +30,27 @@ object Programs {
     } yield ()
   }
 
-  val app = implicitly[App[App.Op]]
-  import app.display._
-  import app.persistence._
 
-  def program2(id: Int): FreeS[App.Op, Unit] = {
+  def program2[F[_]](id: Int)(implicit app:App[F]): FreeS[F, Unit] = {
+    import app.persistence._
+    import app.display._
+    implicit val kkkk = app.persistence
     for {
       cachedToken <- cache.get(1)
-      id <- program3(23)(app.persistence)
+      //id <- Testingthis.program3(23)
       value <- database.get(23)
       _ <- presenter.show(value)
     } yield ()
   }
+//}
+  object Testingthis {
 
-  def program3[F[_]:Persistence](id: Int): FreeS[F, Unit] = {
-    val per = implicitly[Persistence[F]]
-    for {
-      cachedToken <- per.cache.get(1)
-    } yield ()
+    def program3(id: Int)(implicit app: Persistence[App.Op]): FreeS[App.Op, Unit] = {
+      println(":::program3::")
+      for {
+        cachedToken <- app.cache.get(1)
+      } yield ()
+    }
   }
 
   def program4[F[_] : Persistence](id: Int): FreeS[F, Option[Int]] = {
