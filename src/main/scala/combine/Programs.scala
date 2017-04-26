@@ -21,10 +21,10 @@ object Programs {
                                             timeOut: => FreeS[T, List[Event]]
                                            )(implicit context: ActorContext, interpreter: FunctionK[T, cats.Id]): List[Event] = {
     //you will get the compilation error when uncomment the code
-    /*
+
     success(message,context).exec[Id](interpreter)
     logger("test message",List(message)).exec[Id](interpreter)
-     */
+
     Nil
   }
 }
