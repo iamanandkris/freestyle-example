@@ -41,4 +41,40 @@ object Programs {
       _ <- app.displayOp.send("Test", ActorRef.noSender)
     } yield ()
   }
+
+  object M1Programs{
+    val m1Interpreters = implicitly[Module1[Module1.Op]]
+    import m1Interpreters.actorOp._
+    import m1Interpreters.loggerOp._
+
+    def logAndSend(value:String):FreeS[Module1.Op, String]={
+      for {
+        one <- warn(value,Nil)
+        two <- send(one, ActorRef.noSender)
+      } yield (one)
+    }
+  }
+
+  object M2Programs{
+    val m2Interpreters = implicitly[Module2[Module2.Op]]
+    import m2Interpreters.actorOp._
+    import m2Interpreters.displayOp._
+
+    def sendAndDisplay(actorRef:ActorRef,msg:String):FreeS[Module2.Op, Boolean]={
+      for {
+        one <- tellFrom(msg,actorRef,actorRef)
+        two <- m2Interpreters.displayOp.send(msg,actorRef)
+        three <- FreeS.pure[Module2.Op,Boolean](true)
+      } yield three
+    }
+  }
+
+  object M3Programs{
+    def logSendAndDisplay(actorRef:ActorRef,msg:String):FreeS[Module3.Op, Boolean]={
+      for{
+        first <- M1Programs.logAndSend(msg)
+        second <- M2Programs.sendAndDisplay(actorRef,first)
+      }yield second
+    }
+  }
 }

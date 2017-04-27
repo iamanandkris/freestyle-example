@@ -2,12 +2,16 @@ package combine
 
 import akka.actor.Actor.Receive
 import akka.actor.{ActorContext, ActorRef, Props}
+import cats.arrow.FunctionK
 import cats.{Id, ~>}
-import combine.Algebras._
-import freestyle.{FreeS, module}
+import combine.Algebras.{DisplayOp, _}
+import freestyle.{FreeS, ParInterpreter, module}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import combine.Module._
+import freestyle.implicits._
+
 import scala.concurrent.duration._
 import scala.concurrent.duration.Duration
 
@@ -58,6 +62,13 @@ object Interpreters {
 
 
 object CombineInterpreters {
-  implicit val loggerAndActorInterpreter: FinalApp.Op ~> Id = implicitly[FinalApp.Op ~> Id]
+  //val loggerInt: LoggerOp.Handler[Id]
+  //val actorInt: ActorOp.Handler[Id]
+  //val displayInt: DisplayOp.Hanler[Id]
+  import InterpretersId._
+
+  //implicit val loggerAndActorInterpreter: ParInterpreter[FinalApp.Op ,Id] = FSHandler[]
+  //implicit val finalApp: ParInterpreter[FinalApp.Op ,Id] = implicitly[ParInterpreter[FinalApp.Op ,Id]]
+  //implicitly[FinalApp.Op ~> Id]
 }
 

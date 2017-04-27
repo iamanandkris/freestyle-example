@@ -20,6 +20,15 @@ object Algebras {
 
   }
 
+  @free trait LoggerAOp[A[_]] {
+    def debug(msg: String, o: List[Event]): FreeS[A, String]
+
+    def info(msg: String, o: List[Event]): FreeS[A, String]
+
+    def warn(msg: String, o: List[Event]): FreeS[A, String]
+
+  }
+
   @free trait ActorOp[A[_]] {
     def send(a: Any, to: ActorRef): FreeS[A, Unit]
 
