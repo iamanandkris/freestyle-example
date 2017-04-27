@@ -12,6 +12,7 @@ object Module {
   @module trait FinalApp[F[_]] {
     val loggerOp: LoggerOp[F]
     val actorOp: ActorOp[F]
+    val displayOp: DisplayOp[F]
   }
 
 }

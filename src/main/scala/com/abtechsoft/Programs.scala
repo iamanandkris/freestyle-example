@@ -1,7 +1,6 @@
 package com.abtechsoft
 
-import com.abtechsoft.Modules.{Persistence, _}
-import freestyle._
+import com.abtechsoft.Modules._
 import freestyle._
 import freestyle.implicits._
 import cats.implicits._
@@ -42,10 +41,10 @@ object Programs {
       _ <- presenter.show(value)
     } yield ()
   }
-//}
+
   object Testingthis {
 
-    def program3(id: Int)(implicit app: Persistence[App.Op]): FreeS[App.Op, Unit] = {
+    def program3(implicit app: Persistence[App.Op]): FreeS[App.Op, Unit] = {
       println(":::program3::")
       for {
         cachedToken <- app.cache.get(1)

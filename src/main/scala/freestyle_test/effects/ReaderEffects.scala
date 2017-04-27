@@ -1,4 +1,4 @@
-package freestyle.effects
+package freestyle_test.effects
 
 import cats.Id
 

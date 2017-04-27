@@ -1,7 +1,7 @@
-package freestyle
+package freestyle_test
 
 import akka.actor.ActorSystem
-import freestyle.FSCallSupervisor.Message
+import freestyle_test.FSCallSupervisor.Message
 
 /**
   * Created by abdhesh on 12/04/17.

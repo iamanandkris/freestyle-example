@@ -1,12 +1,13 @@
-package freestyle
+package freestyle_test
 
 import akka.actor.{Actor, ActorRef}
 import akka.util.ByteString
 import akka.pattern.pipe
 import cats.implicits._
-import freestyle.FSCallSupervisor.ParsedMessage
+import freestyle_test.FSCallSupervisor.ParsedMessage
+import freestyle._
 import freestyle.implicits._
-import freestyle.algebra.Interpreters._
+import freestyle_test.algebra.Interpreters._
 
 import scala.concurrent.Future
 
@@ -21,7 +22,7 @@ trait FreeSwitchActor extends Actor {
 
   override def receive: Receive = {
     case in: ByteString =>
-      val result: Future[Option[(List[String], String)]] = parseMessage[freestyle.algebra.Algebra.Parser.Op](buffer + in.utf8String).exec[Future]
+      val result: Future[Option[(List[String], String)]] = parseMessage[freestyle_test.algebra.Algebra.Parser.Op](buffer + in.utf8String).exec[Future]
 
       result.collect {
         case Some((list, _)) => ParsedMessage(list)

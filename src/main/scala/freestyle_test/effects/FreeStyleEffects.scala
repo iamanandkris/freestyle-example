@@ -1,4 +1,4 @@
-package freestyle.effects
+package freestyle_test.effects
 
 /**
   * Created by abdhesh on 10/04/17.

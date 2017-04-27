@@ -4,6 +4,9 @@ import akka.actor.Actor.Receive
 import akka.actor.{ActorContext, ActorRef, Props}
 import cats.{Id, ~>}
 import combine.Algebras._
+import freestyle.{FreeS, module}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import combine.Module._
 import scala.concurrent.duration._
 import scala.concurrent.duration.Duration
@@ -13,43 +16,48 @@ import scala.concurrent.duration.Duration
   */
 object Interpreters {
 
-  implicit val StatelessLoggerInterpreter = new LoggerOp.Handler[Id] {
-    def debug(msg: String, o: List[Event]): Id[Unit] = println(s"[Debug] : ${msg}")
+  implicit val StatelessActorOpsInterpreter = new ActorOp.Handler[Future] {
+    def send(a: Any, to: ActorRef): Future[Unit] = Future.successful(to ! a)
 
-    def info(msg: String, o: List[Event]): Id[Unit] = println(s"[Info] : ${msg}")
+    def sendToActorSelection(a: Any, context: ActorContext, path: String): Future[Unit] = Future.successful(context.actorSelection(path) ! a)
 
-    def warn(msg: String, o: List[Event]): Id[Unit] = println(s"[Warn] : ${msg}")
+    def tellFrom(a: Any, to: ActorRef, from: ActorRef): Future[Unit] = Future.successful(to tell(a, from))
 
-    def error(msg: String, o: List[Event]): Id[Unit] = println(s"[Error] : ${msg}")
-  }
-
-  implicit val StatelessActorOpsInterpreter = new ActorOp.Handler[Id] {
-    def send(a: Any, to: ActorRef): Id[Unit] = to ! a
-
-    def sendToActorSelection(a: Any, context: ActorContext, path: String): Id[Unit] = context.actorSelection(path) ! a
-
-    def tellFrom(a: Any, to: ActorRef, from: ActorRef): Id[Unit] = to tell(a, from)
-
-    def timeOut(context: ActorContext, time: Int): Id[Unit] = {
+    def timeOut(context: ActorContext, time: Int): Future[Unit] = {
       if (time == 0) {
-        context.setReceiveTimeout(Duration.Undefined)
+        Future.successful(context.setReceiveTimeout(Duration.Undefined))
       }
       else {
-        context.setReceiveTimeout(time seconds)
+        Future.successful(context.setReceiveTimeout(time seconds))
       }
     }
 
-    def transitionState(context: ActorContext, state: () => Receive): Id[Unit] = context.become(state())
+    def transitionState(context: ActorContext, state: () => Receive): Future[Unit] = Future.successful(context.become(state()))
 
-    def stopActor(context: ActorContext, victim: ActorRef): Id[Unit] = context.stop(victim)
+    def stopActor(context: ActorContext, victim: ActorRef): Future[Unit] = Future.successful(context.stop(victim))
 
-    def createActor(props: Props, name: String, context: ActorContext): Id[ActorRef] = context.actorOf(props, name)
+    def createActor(props: Props, name: String, context: ActorContext): Future[ActorRef] = Future.successful(context.actorOf(props, name))
 
+  }
+
+
+  implicit val StatelessLoggerInterpreter = new LoggerOp.Handler[Future] {
+    def debug(msg: String, o: List[Event]): Future[Unit] = Future.successful(println(s"[Debug] : ${msg}"))
+
+    def info(msg: String, o: List[Event]): Future[Unit] = Future.successful(println(s"[Info] : ${msg}"))
+
+    def warn(msg: String, o: List[Event]): Future[Unit] = Future.successful(println(s"[Warn] : ${msg}"))
+
+    def error(msg: String, o: List[Event]): Future[Unit] = Future.successful(println(s"[Error] : ${msg}"))
+  }
+
+  implicit val DisplayOpInterpreter = new DisplayOp.Handler[Future] {
+    def send(a: Any, to: ActorRef): Future[Unit] = Future.successful(println("send function::::" + a))
   }
 }
 
-object CombineInterpreters{
-  import Interpreters._
+
+object CombineInterpreters {
   implicit val loggerAndActorInterpreter: FinalApp.Op ~> Id = implicitly[FinalApp.Op ~> Id]
-  //implicit val loggerAndActorInterpreter: FinalApp.Op ~> Id = Interpreters.StatelessLoggerInterpreter or Interpreters.StatelessActorOpsInterpreter
 }
+

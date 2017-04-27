@@ -37,4 +37,8 @@ object Algebras {
 
   }
 
+  @free trait DisplayOp[A[_]] {
+    def send(a: Any, to: ActorRef): FreeS[A, Unit]
+  }
+
 }

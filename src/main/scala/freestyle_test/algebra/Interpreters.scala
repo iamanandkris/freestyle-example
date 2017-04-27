@@ -1,4 +1,4 @@
-package freestyle.algebra
+package freestyle_test.algebra
 
 import scala.concurrent.Future
 
@@ -8,7 +8,7 @@ import scala.concurrent.Future
   */
 object Interpreters {
 
-  implicit val parserInterpreter = new freestyle.algebra.Algebra.Parser.Handler[Future] {
+  implicit val parserInterpreter = new Algebra.Parser.Handler[Future] {
     def parse(text: String): Future[Option[(List[String], String)]] = {
       Future.successful(Some(text.split(",").toList -> "Un-parsed"))
     }

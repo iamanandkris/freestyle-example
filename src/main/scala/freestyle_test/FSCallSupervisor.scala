@@ -1,8 +1,8 @@
-package freestyle
+package freestyle_test
 
 import akka.actor.{Actor, Props}
 import akka.util.ByteString
-import freestyle.FSCallSupervisor.{Message, ParsedMessage}
+import freestyle_test.FSCallSupervisor.{Message, ParsedMessage}
 
 /**
   * Created by abdhesh on 12/04/17.

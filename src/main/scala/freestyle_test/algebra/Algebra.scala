@@ -1,4 +1,4 @@
-package freestyle.algebra
+package freestyle_test.algebra
 
 import cats.Monad
 import freestyle.{FreeS, free}

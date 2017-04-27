@@ -1,6 +1,7 @@
-package freestyle
+package freestyle_test
 
-import freestyle.algebra.Algebra.Parser
+import freestyle.FreeS
+import freestyle_test.algebra.Algebra.Parser
 
 /**
   * Created by abdhesh on 12/04/17.
