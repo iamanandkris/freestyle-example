@@ -16,12 +16,12 @@ case class User(id: Long, name: String)
   */
 object Test extends App {
 
-  @free trait UserRepository[F[_]] {
-    def get(id: Long): FreeS[F, Option[User]]
+  @free trait UserRepository {
+    def get(id: Long): FS[Option[User]]
 
-    def save(user: Option[User]): FreeS[F, Option[User]]
+    def save(user: Option[User]): FS[Option[User]]
 
-    def getAll(filter: String): FreeS[F, List[User]]
+    def getAll(filter: String): FS[List[User]]
   }
 
   implicit val userHandler = new UserRepository.Handler[Future] {
@@ -46,7 +46,7 @@ object Test extends App {
     } yield (users)
   }
 
-  val futureValue = program[UserRepository.Op].exec[Future]
+  val futureValue = program[UserRepository.Op].interpret[Future]
   val result = Await.result(futureValue, Duration.Inf)
   println(futureValue)
 }

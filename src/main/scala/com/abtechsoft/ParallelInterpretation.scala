@@ -15,10 +15,10 @@ object ParallelInterpretation extends App {
   import scala.concurrent.ExecutionContext.Implicits.global
   import freestyle.implicits._
 
-  @free trait Validation[F[_]] {
-    def minSize(n: Int): FreeS.Par[F, Boolean]
+  @free trait Validation {
+    def minSize(n: Int): FS[Boolean]
 
-    def hasNumber: FreeS.Par[F, Boolean]
+    def hasNumber: FS[Boolean]
   }
 
   type ParValidator[A] = Kleisli[Future, String, A]
@@ -37,6 +37,6 @@ object ParallelInterpretation extends App {
   val parValidation = (validation.minSize(3) |@| validation.hasNumber).map(_ :: _ :: Nil)
   // parValidation: freestyle.FreeS.Par[Validation.Op,List[Boolean]] = FreeApplicative(...)
 
-  val validator = parValidation.exec[ParValidator].run("abc1")
+  val validator = parValidation.interpret[ParValidator].run("abc1")
   println(Await.result(validator, Duration(2, SECONDS)))
 }

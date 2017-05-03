@@ -44,7 +44,7 @@ class freeTests extends WordSpec with Matchers {
         a <- s.x(1)
         b <- s.y(1)
       } yield a + b
-      program.exec[Option] shouldBe Option(2)
+      program.interpret[Option] shouldBe Option(2)
     }
 
     "reuse program interpretation in diferent runtimes" in {
@@ -55,30 +55,30 @@ class freeTests extends WordSpec with Matchers {
         a <- s.x(1)
         b <- s.y(1)
       } yield a + b
-      program.exec[Option] shouldBe Option(2)
-      program.exec[List] shouldBe List(2)
+      program.interpret[Option] shouldBe Option(2)
+      program.interpret[List] shouldBe List(2)
     }
 
     "allow multiple args in smart constructors" in {
       @free
-      trait MultiArgs[F[_]] {
-        def x(a: Int, b: Int, c: Int): FreeS[F, Int]
+      trait MultiArgs {
+        def x(a: Int, b: Int, c: Int): FS[Int]
       }
     }
 
     "allow smart constructors with no args" in {
       @free
-      trait NoArgs[F[_]] {
-        def x: FreeS[F, Int]
+      trait NoArgs {
+        def x: FS[Int]
       }
     }
 
     "generate ADTs with friendly names and expose them as dependent types" in {
       @free
-      trait FriendlyFreeS[F[_]] {
-        def sc1(a: Int, b: Int, c: Int): FreeS[F, Int]
+      trait FriendlyFreeS {
+        def sc1(a: Int, b: Int, c: Int): FS[Int]
 
-        def sc2(a: Int, b: Int, c: Int): FreeS[F, Int]
+        def sc2(a: Int, b: Int, c: Int): FS[Int]
       }
       implicitly[FriendlyFreeS.Op[_] =:= FriendlyFreeS.Op[_]]
       implicitly[FriendlyFreeS.Sc1OP <:< FriendlyFreeS.Op[Int]]
@@ -88,12 +88,12 @@ class freeTests extends WordSpec with Matchers {
 
     "allow smart constructors with type arguments" in {
       @free
-      trait KVStore[F[_]] {
-        def put[A](key: String, value: A): FreeS[F, Unit]
+      trait KVStore {
+        def put[A](key: String, value: A): FS[Unit]
 
-        def get[A](key: String): FreeS[F, Option[A]]
+        def get[A](key: String): FS[Option[A]]
 
-        def delete(key: String): FreeS[F, Unit]
+        def delete(key: String): FS[Unit]
       }
       val interpreter = new KVStore.Handler[List] {
         def put[A](key: String, value: A): List[Unit] = Nil
@@ -106,12 +106,12 @@ class freeTests extends WordSpec with Matchers {
 
     "allow evaluation of abstract members that return FreeS.Pars" in {
       @free
-      trait ApplicativesServ[F[_]] {
-        def x(key: String): FreeS.Par[F, String]
+      trait ApplicativesServ {
+        def x(key: String): FS[String]
 
-        def y(key: String): FreeS.Par[F, String]
+        def y(key: String): FS[String]
 
-        def z(key: String): FreeS.Par[F, String]
+        def z(key: String): FS[String]
       }
       implicit val interpreter = new ApplicativesServ.Handler[Option] {
         def x(key: String): Option[String] = Some(key)
@@ -125,17 +125,17 @@ class freeTests extends WordSpec with Matchers {
       val program = (x("a") |@| y("b") |@| z("c")).map {
         _ + _ + _
       }.freeS
-      program.exec[Option] shouldBe Some("abc")
+      program.interpret[Option] shouldBe Some("abc")
     }
 
     "allow sequential evaluation of combined FreeS & FreeS.Par" in {
       @free
-      trait MixedFreeS[F[_]] {
-        def x(key: String): FreeS.Par[F, String]
+      trait MixedFreeS {
+        def x(key: String): FS[String]
 
-        def y(key: String): FreeS.Par[F, String]
+        def y(key: String): FS[String]
 
-        def z(key: String): FreeS[F, String]
+        def z(key: String): FS[String]
       }
       implicit val interpreter = new MixedFreeS.Handler[Option] {
         def x(key: String): Option[String] = Some(key)
@@ -153,12 +153,12 @@ class freeTests extends WordSpec with Matchers {
         n <- z("1")
         m <- apProgram.freeS
       } yield n + m
-      program.exec[Option] shouldBe Some("1ab")
+      program.interpret[Option] shouldBe Some("1ab")
     }
 
     "allow non-FreeS concrete definitions in the trait" in {
-      @free trait WithExtra[F[_]] {
-        def x(a: Int): FreeS.Par[F, String]
+      @free trait WithExtra {
+        def x(a: Int): FS[String]
 
         def y: Int = 5
 
@@ -171,14 +171,14 @@ class freeTests extends WordSpec with Matchers {
       implicit val interpreter = new WithExtra.Handler[Id] {
         def x(a: Int): String = a.toString
       }
-      v.x(v.z).exec[Id] shouldBe "6"
+      v.x(v.z).interpret[Id] shouldBe "6"
     }
 
     "allow `FreeS` operations that use other abstractoperations" in {
-      @free trait Combine[F[_]] {
-        def x(a: Int): FreeS[F, Int]
+      @free trait Combine {
+        def x(a: Int): FS[Int]
 
-        def y(a: Int): FreeS[F, Boolean] = x(a).map {
+        def y(a: Int): FS[Boolean] = x(a).map {
           _ >= 0
         }
       }
@@ -186,7 +186,7 @@ class freeTests extends WordSpec with Matchers {
       implicit val interpreter = new Combine.Handler[Id] {
         def x(a: Int): Int = 4
       }
-      v.y(5).exec[Id] shouldBe (true)
+      v.y(5).interpret[Id] shouldBe (true)
     }
 
   }

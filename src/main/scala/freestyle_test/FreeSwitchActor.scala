@@ -22,7 +22,7 @@ trait FreeSwitchActor extends Actor {
 
   override def receive: Receive = {
     case in: ByteString =>
-      val result: Future[Option[(List[String], String)]] = parseMessage[freestyle_test.algebra.Algebra.Parser.Op](buffer + in.utf8String).exec[Future]
+      val result: Future[Option[(List[String], String)]] = parseMessage[freestyle_test.algebra.Algebra.Parser.Op](buffer + in.utf8String).interpret[Future]
 
       result.collect {
         case Some((list, _)) => ParsedMessage(list)

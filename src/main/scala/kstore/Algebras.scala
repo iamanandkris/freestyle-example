@@ -1,5 +1,6 @@
 package kstore
 
+import cats.free.FreeApplicative
 
 
 /**
@@ -8,26 +9,28 @@ package kstore
 object Algebras {
 
   import freestyle._
+  import freestyle.implicits._
   import cats.implicits._
 
-  @free trait KVStore[F[_]] {
-    def put[A](key: String, value: A): FreeS[F, Unit]
+  @free trait KVStore {
+    def put[A](key: String, value: A): FS[Unit]
 
-    def get[A](key: String): FreeS[F, Option[A]]
+    def get[A](key: String): FS[Option[A]]
 
-    def delete(key: String): FreeS[F, Unit]
+    def delete(key: String): FS[Unit]
 
-    def update[A](key: String, f: A => A): FreeS[F, Unit] =
-      get[A](key) flatMap {
-        case Some(a) => put[A](key, f(a))
-        case None => FreeS.pure()
+    def update[A](key: String, f: A => A): FS.Seq[Unit] =
+      get[A](key).freeS flatMap {
+        case Some(a) => put[A](key, f(a)).freeS
+        case None => ().pure[FS.Seq]
       }
+
   }
 
-  @free trait Log[F[_]] {
-    def info(msg: String): FreeS[F, Unit]
+  @free trait Log {
+    def info(msg: String): FS[Unit]
 
-    def warn(msg: String): FreeS[F, Unit]
+    def warn(msg: String): FS[Unit]
   }
 
 }

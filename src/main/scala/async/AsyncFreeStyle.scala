@@ -30,7 +30,7 @@ object AsyncFreeStyle extends App {
   import cats.implicits._
 
   //val fut1 = dickensBooks.exec[Future]
-  val fut2 = otherBooks.exec[Future]
+  val fut2 = otherBooks.interpret[Future]
  // println(Await.result(fut1, Duration.Inf))
   println(Await.result(fut2, Duration.Inf))
 

@@ -4,6 +4,7 @@ import akka.actor.Props
 import freestyle.FreeS
 import freestyle_test.algebra.Algebra
 import freestyle_test.algebra.Algebra.Parser
+import freestyle._
 
 /**
   * Created by abdhesh on 12/04/17.

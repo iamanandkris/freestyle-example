@@ -8,30 +8,30 @@ import freestyle._
   */
 object Modules {
 
-  @module trait Persistence[F[_]] {
-    val database: Database[F]
-    val cache: Cache[F]
+  @module trait Persistence {
+    val database: Database
+    val cache: Cache
   }
 
-  @module trait Display[F[_]] {
-    val presenter: Presenter[F]
-    val validator: IdValidation[F]
+  @module trait Display {
+    val presenter: Presenter
+    val validator: IdValidation
   }
 
-  @module trait App[F[_]] {
-    val persistence: Persistence[F]
-    val display: Display[F]
+  @module trait App {
+    val persistence: Persistence
+    val display: Display
   }
 
-  @module trait App1[F[_]] {
-    val persistence: Persistence[F]
+  @module trait App1 {
+    val persistence: Persistence
   }
 
-  @module trait AccountUpdateServiceApp[F[_]] {
-    val validation: ValidationOp[F]
-    val dbOperation: DBOperation[F]
-    val arithOperation: Arith[F]
-    val sagaOperation: SagaOP[F]
+  @module trait AccountUpdateServiceApp {
+    val validation: ValidationOp
+    val dbOperation: DBOperation
+    val arithOperation: Arith
+    val sagaOperation: SagaOP
   }
 
 }

@@ -1,49 +1,55 @@
 package com.abtechsoft
 
 import freestyle._
+import freestyle.implicits._
 
 /**
   * Created by abdhesh on 06/04/17.
   */
 object Algebras {
 
-  @free trait Database[F[_]] {
-    def get(id: Int): FreeS[F, Option[User]]
+  @free trait Database {
+    def get(id: Int): FS[Option[User]]
 
-    def save(user: Option[User]): FreeS[F, Option[User]]
+    def save(user: Option[User]): FS[Option[User]]
 
-    def getAll(filter: String): FreeS[F, List[User]]
+    def getAll(filter: String): FS[List[User]]
   }
 
-  @free trait Cache[F[_]] {
-    def get(id: Int): FreeS[F, Option[Int]]
+  @free trait Cache {
+    def get(id: Int): FS[Option[Int]]
   }
 
-  @free trait Presenter[F[_]] {
-    def show(user: Option[User]): FreeS[F, Unit]
+  @free trait Presenter {
+    def show(user: Option[User]): FS[Unit]
   }
 
-  @free trait IdValidation[F[_]] {
-    def validate(id: Option[Int]): FreeS[F, Int]
+  @free trait IdValidation {
+    def validate(id: Option[Int]): FS[Int]
   }
 
-  @free trait Arith[F[_]] {
-    def add(x:Int,y:Int):FreeS[F,Int]
-    def subtract(x:Int,y:Int):FreeS[F,Int]
+  @free trait Arith {
+    def add(x: Int, y: Int): FS[Int]
+
+    def subtract(x: Int, y: Int): FS[Int]
   }
 
-  @free trait SagaOP[F[_]] {
-    def updateAccount(account:(String,String,Double)):FreeS[F,Boolean]
-    def updateUser(user:(String,String,Int)):FreeS[F,Boolean]
+  @free trait SagaOP {
+    def updateAccount(account: (String, String, Double)): FS[Boolean]
+
+    def updateUser(user: (String, String, Int)): FS[Boolean]
   }
 
-  @free trait DBOperation[F[_]] {
-    def getUserById(key:String):FreeS.Par[F,(String,String,Int)]
-    def getAccountById(key:String):FreeS.Par[F,(String,String,Double)]
+  @free trait DBOperation {
+    def getUserById(key: String): FS[(String, String, Int)]
+
+    def getAccountById(key: String): FS[(String, String, Double)]
   }
 
-  @free trait ValidationOp[F[_]] {
-    def validateUser(inp:(String,String,Int)):FreeS.Par[F,Boolean]
-    def validateAccount(inp:(String,String,Double)):FreeS.Par[F,Boolean]
+  @free trait ValidationOp {
+    def validateUser(inp: (String, String, Int)): FS[Boolean]
+
+    def validateAccount(inp: (String, String, Double)): FS[Boolean]
   }
+
 }

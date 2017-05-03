@@ -16,6 +16,6 @@ object EntryPoint extends App {
 
   //import CombineInterpreters._
   import InterpretersId._
-  val a = Programs.program.exec[Id]
+  val a = Programs.program.interpret[Id]
   //Await.result(a, 1 second)
 }

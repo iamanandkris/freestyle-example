@@ -3,7 +3,6 @@ package combine
 import akka.actor.{ActorContext, ActorRef}
 import cats.Id
 import combine.Algebras.{DisplayOp, Event}
-import freestyle.FreeS
 import freestyle._
 import freestyle.implicits._
 import cats.implicits._
@@ -22,8 +21,8 @@ object Programs {
                                            )(implicit context: ActorContext, interpreter: ParInterpreter[T, cats.Id]): List[Event] = {
     //you will get the compilation error when uncomment the code
 
-    success(message, context).exec[Id]
-    logger("test message", List(message)).exec[Id]
+    //success(message, context).interpret[Id]
+    //logger("test message", List(message)).interpret[Id]
     Nil
   }
 

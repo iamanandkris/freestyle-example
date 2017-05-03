@@ -35,8 +35,8 @@ object ReaderEffects extends App {
       c <- FreeS.pure(1)
     } yield a + b + c
 
-  val resultAsk: Id[Config] = programAsk[rd.ReaderM.Op].exec[ConfigEnv].run(Config(n = 10))
+  val resultAsk: Id[Config] = programAsk[rd.ReaderM.Op].interpret[ConfigEnv].run(Config(n = 10))
   println(resultAsk)
-  val resultReader: Id[Int] = programReader[rd.ReaderM.Op].exec[ConfigEnv].run(Config(n = 1))
+  val resultReader: Id[Int] = programReader[rd.ReaderM.Op].interpret[ConfigEnv].run(Config(n = 1))
   println(resultReader)
 }

@@ -11,14 +11,14 @@ lazy val root = (project in file("."))
   )
   .settings(
     libraryDependencies ++= Seq(
-      "com.47deg" %% "freestyle" % "0.1.0-SNAPSHOT",
-      "com.47deg" %% "freestyle-effects" % "0.1.0-SNAPSHOT",
-      "com.47deg" %% "freestyle-async" % "0.1.0-SNAPSHOT",
+      "com.47deg" %% "freestyle" % "0.1.0",
+      "com.47deg" %% "freestyle-effects" % "0.1.0",
+      "com.47deg" %% "freestyle-async" % "0.1.0",
       "io.monix" %% "monix" % "2.2.4",
       "io.monix" %% "monix-cats" % "2.2.4",
       "com.typesafe.akka" %% "akka-actor" % "2.4.17",
       "org.scalatest" %% "scalatest" % "3.0.1" % "test",
       "com.typesafe.akka" %% "akka-testkit" % "2.5.0",
-      compilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.patch),
+      compilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full),
       compilerPlugin("org.spire-math" %% "kind-projector" % "0.9.3")
     ))

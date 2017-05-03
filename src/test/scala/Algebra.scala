@@ -1,12 +1,12 @@
-import freestyle.{FreeS, free}
+import freestyle._
 
 /**
   * Created by abdhesh on 13/04/17.
   */
 object Algebra {
   @free
-  trait Validation[F[_]] {
-    def minSize(n: Int): FreeS.Par[F, Boolean]
-    def hasNumber: FreeS.Par[F, Boolean]
+  trait Validation {
+    def minSize(n: Int): FS[Boolean]
+    def hasNumber: FS[Boolean]
   }
 }

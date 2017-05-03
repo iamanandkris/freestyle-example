@@ -31,8 +31,8 @@ object StateEffects extends App {
     } yield a
 
 
-  val stateResult = programGet[st.StateM.Op].exec[TargetState].run(1).value
-  val stateResultSet = programSet[st.StateM.Op].exec[TargetState].run(0).value
+  val stateResult = programGet[st.StateM.Op].interpret[TargetState].run(1).value
+  val stateResultSet = programSet[st.StateM.Op].interpret[TargetState].run(0).value
   println(stateResultSet)
   println(stateResult)
 }

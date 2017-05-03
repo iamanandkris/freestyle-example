@@ -25,7 +25,7 @@ object MixingSequentialTask extends  App {
   import com.abtechsoft.Modules._
   import TaskMonad._
 
-  val resultTask = Programs.accountUpdateprogram[AccountUpdateServiceApp.Op](("new", "newDep", 34.45), ("new", "newDep", 34)).exec[TaskInterpreters.ParMixedTask]
+  val resultTask = Programs.accountUpdateprogram[AccountUpdateServiceApp.Op](("new", "newDep", 34.45), ("new", "newDep", 34)).interpret[TaskInterpreters.ParMixedTask]
 
   val output = Await.result(resultTask().runAsync, 10 seconds)
   println(output)

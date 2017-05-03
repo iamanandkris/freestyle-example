@@ -60,4 +60,3 @@ object Interpreters {
 object CombineInterpreters {
   implicit val loggerAndActorInterpreter: FinalApp.Op ~> Id = implicitly[FinalApp.Op ~> Id]
 }
-

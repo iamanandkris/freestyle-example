@@ -10,6 +10,6 @@ object EntryPoint extends App {
   import Interpreter._
   import Module._
 
-  val result = Programs.program[Backend.Op].exec[KVStoreState]
+  val result = Programs.program[Backend.Op].interpret[KVStoreState]
   println(result.run(Map.empty[String,Any]).value._1)
 }

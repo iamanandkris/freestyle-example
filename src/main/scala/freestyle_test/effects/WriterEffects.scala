@@ -33,8 +33,8 @@ object WriterEffects extends App {
     } yield b
 
 
-  val result = programWriter[wr.WriterM.Op].exec[Logger].run
-  val resultTell = programTell[wr.WriterM.Op].exec[Logger].run
+  val result = programWriter[wr.WriterM.Op].interpret[Logger].run
+  val resultTell = programTell[wr.WriterM.Op].interpret[Logger].run
 
   println(result)
   println(resultTell)

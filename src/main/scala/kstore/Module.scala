@@ -8,8 +8,8 @@ object Module {
   import Algebras._
   import freestyle._
 
-  @module trait Backend[F[_]] {
-    val store: KVStore[F]
-    val log: Log[F]
+  @module trait Backend {
+    val store: KVStore
+    val log: Log
   }
 }

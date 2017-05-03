@@ -69,19 +69,19 @@ object FreeStyleEffects extends App {
       c <- FreeS.pure(1)
     } yield a + b + c
 
-  val resultLeft = shortCircuit[ErrorM.Op].exec[Target]
-  val resultRight = continueWithRightValue[ErrorM.Op].exec[Target]
+  val resultLeft = shortCircuit[ErrorM.Op].interpret[Target]
+  val resultRight = continueWithRightValue[ErrorM.Op].interpret[Target]
   println(resultLeft)
   println(resultRight)
 
-  val catchException = catchingExceptions[ErrorM.Op].exec[Target]
+  val catchException = catchingExceptions[ErrorM.Op].interpret[Target]
   println(catchException)
-  val optResult = programNone[OptionM.Op].exec[Option]
+  val optResult = programNone[OptionM.Op].interpret[Option]
   println(optResult)
 
-  val optResultSome = programSome[OptionM.Op].exec[Option]
+  val optResultSome = programSome[OptionM.Op].interpret[Option]
   println(optResultSome)
 
-  val nonResult = programNone2[OptionM.Op].exec[Option]
+  val nonResult = programNone2[OptionM.Op].interpret[Option]
   println(nonResult)
 }
