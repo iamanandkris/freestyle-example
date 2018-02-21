@@ -1,3 +1,4 @@
+import cats.data.{NonEmptyList, Validated}
 import freestyle.free._
 import freestyle.free.effects._
 
@@ -33,10 +34,22 @@ object collision {
     def x: FS[Int]
   }
 
+  @free
+  trait F {
+    def validate: FS[Validated[NonEmptyList[Exception], String]]
+  }
+
   @module
   trait X {
     val a: B
     val b: C
+    val f: F
+
+    def program = for {
+      _ <- a.x
+      _ <- b.x
+      v <- f.validate
+    } yield v
   }
 
   @module

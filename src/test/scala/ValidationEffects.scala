@@ -3,6 +3,7 @@ import freestyle.free._
 import freestyle.free.implicits._
 import cats._
 import cats.implicits._
+import freestyle.free.effects.error.ErrorM
 import freestyle.tagless._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -21,7 +22,15 @@ class FreeStyleEffectsTests extends AsyncWordSpec with Matchers {
     import cats.mtl.implicits._
 
     "allow an Option to be interleaved inside a program monadic flow" in {
-      def program(implicit op: OptionM[OptionM.Op]) =
+      val ex = new RuntimeException("BOOM")
+      sealed trait CustomError
+      case object Custom1 extends CustomError
+
+      import freestyle.free.effects.either
+
+      val e = either[CustomError]
+
+      def program(implicit op: OptionM[OptionM.Op], eop: ErrorM[ErrorM.Op]) =
         for {
           a <- FreeS.pure(1)
           b <-Option(1).liftFS
