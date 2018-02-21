@@ -12,6 +12,12 @@ import scala.concurrent.{Await, ExecutionContext, Future}
 
 class ValidationSpec extends FlatSpec with Matchers with ScalaFutures {
 
+
+  @free trait ValidationM {
+    def validateOrBreak[E, A](validations: ValidatedNel[E, A]): FS[A]
+  }
+
+
   @free trait Numbers {
     def moreThan(a: Int): FS[Int]
   }
@@ -27,13 +33,20 @@ class ValidationSpec extends FlatSpec with Matchers with ScalaFutures {
   @module trait Ops {
     val int: Numbers
     val string: Strings
-    val v: Validation
+    val v: ValidationM
+    val v1: Validation
   }
 
-  type ValidationResult[A] = ValidatedNel[String, A]
+  type ValidationResult[A] = ValidatedNel[Any, A]
+
+
+  implicit val validationHandler = new ValidationM.Handler[ValidationResult] {
+    override protected[this] def validateOrBreak[E, A](validations: ValidatedNel[E, A]): ValidationResult[A] = validations
+  }
 
   class NumHandler(b: Int)(implicit executionContext: ExecutionContext) extends Numbers.Handler[ValidationResult] {
     override protected[this] def moreThan(a: Int): ValidationResult[Int] = {
+
       if (a > b) a.validNel else "Not more than".invalidNel
     }
   }
@@ -66,16 +79,16 @@ class ValidationSpec extends FlatSpec with Matchers with ScalaFutures {
   }
 
   implicit object strings extends StringHandler("")
+
   import freestyle.free.effects.validation
-  val vl = validation[String]
-  import vl.implicits._
+
 
   def addPgrm(a: Int)(implicit op: Ops[Ops.Op]) = {
     import op._
     for {
       i <- int.moreThan(a)
       s <- string.concat(a.toString)
-      vv <- op.v.validation("")
+
     } yield i.toString.concat(s)
   }
 
@@ -87,6 +100,24 @@ class ValidationSpec extends FlatSpec with Matchers with ScalaFutures {
   it should "throw ValidationError" in {
     assertThrows[ValidationError[_]] {
       Await.result(addPgrm(3).interpret[Future], Duration.Inf)
+    }
+  }
+
+  "mixed logic" should "work" in {
+    def validate(numIn: Seq[String]): Validated[String, Seq[String]] = "Invalid".invalid
+
+    def pgrm(implicit op: Ops[Ops.Op]): FreeS[Ops.Op, Seq[String]] = {
+      for {
+        numbers <- FreeS.pure(Seq("sgfdsfgd"))
+        result <- op.v1.validation("")
+        _ <- op.v.validateOrBreak(result)
+        _ <- op.v.validateOrBreak(validate(numbers).toValidatedNel)
+        _ <- op.string.concat("test")
+      } yield numbers
+    }
+
+    whenReady(pgrm.interpret[Future]) {
+      case r => println(r)
     }
   }
 
