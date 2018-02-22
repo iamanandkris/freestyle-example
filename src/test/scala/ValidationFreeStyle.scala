@@ -13,6 +13,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ValidationFreeStyle extends AsyncWordSpec with Matchers with ScalaFutures {
 
   type ValidationResult
+
   implicit override def executionContext = ExecutionContext.Implicits.global
 
   implicit val bHandler = new B.Handler[Future] {
@@ -29,8 +30,7 @@ class ValidationFreeStyle extends AsyncWordSpec with Matchers with ScalaFutures 
   "Mixing freestyle and cats validation" should {
     val result = X[X.Op].program.interpret[Future]
     whenReady(result) {
-      case r =>
-        print("::::::::::::" + r)
+      case r => print(r)
     }
 
   }
