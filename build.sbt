@@ -3,7 +3,7 @@ val elastic4s = Seq(
   "com.sksamuel.elastic4s" %% "elastic4s-circe" % "6.1.3"
 )
 
-val freeStyleV = "0.6.3"
+val freeStyleV = "0.8.2"
 val circe = Seq(
   "io.circe" %% "circe-core",
   "io.circe" %% "circe-generic",
