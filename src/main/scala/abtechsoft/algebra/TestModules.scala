@@ -13,7 +13,7 @@ object TestModules {
     val cache: Cache
     val database: Database
   }
-  @module trait App {
+  @module trait InternalInterfaceModule {
     val persistence: Persistence
     val display: Display
   }
